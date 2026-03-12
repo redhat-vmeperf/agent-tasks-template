@@ -76,6 +76,9 @@ Before producing your gate artifact, read the sections relevant to your role. Pr
 <!-- Session: 2026-03-09 (inclusive-language) -->
 - [Gate 4] Human corrected enforcement scope from "4, 5, 6, 7" to "all gates" for a cross-cutting requirement → When a requirement governs language, style, or conventions (not just code), it applies at every gate — architecture text, security reviews, and sprint briefs must also comply → Cross-cutting requirements default to all-gate enforcement unless there is a specific reason to restrict scope
 
+<!-- Session: 2026-03-11 -->
+- [Gate 4] Human redirected implementation order: "create the shared file first, then present the changes to the consumers" → When extracting shared logic from multiple files into a new shared artifact, create the shared artifact first before modifying any consumer → Establishes the dependency before the references; prevents presenting incomplete work where consumers reference a file that does not yet exist
+
 ---
 
 ## Gate 5: Code Review
@@ -106,6 +109,17 @@ Before producing your gate artifact, read the sections relevant to your role. Pr
 
 <!-- Session: 2026-03-09 -->
 - [Gate 7] Human rejected Gate 7 twice to request infrastructure improvements (cargo audit in CI, version bump, edition bump) → The final security gate is where the human validates the entire release, not just the code diff; be prepared for scope additions that improve the project's security posture or release hygiene → Gate 7 rejections are not always about code findings; they can be about build/release process gaps
+
+<!-- Session: 2026-03-11 -->
+- [Gate 7] Human required mitigating all LOW and INFO findings at Gate 7 rather than accepting them → Reinforces existing pattern: this human expects all findings resolved regardless of severity → Pre-resolve all findings before presenting Gate 7, or present with implemented fixes ready for approval
+
+---
+
+## Cross-Cutting Lessons (continued)
+
+<!-- Session: 2026-03-11 -->
+- [Cross-Cutting] When a skill argument provides an example referencing a specific file path that could itself be a scan or injection target, the example creates a hardcoded assumption → Skill arguments should only reference files known at runtime, not embed specific paths as examples → Prevents assumption leakage and reduces attack surface of the skill definition
+- [Gate 1] Human rejected a content framing delimiter design because the delimiter could be injected into the file itself to break out of the data frame → When designing data/instruction boundaries, the boundary markers must be verified absent from the data before use; presence of boundary markers in the data is an immediate security failure → Always verify delimiter uniqueness against content; treat delimiter presence in data as a framing attack
 
 ---
 
