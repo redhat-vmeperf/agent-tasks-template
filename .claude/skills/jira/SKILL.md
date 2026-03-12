@@ -1,18 +1,17 @@
 ---
 name: jira
-description: Walk the human through the process of creating jira tickets. The process will be handled as a pipeline for a task, with human approval gates at each stage. Invokes specialized agents through architecture, security review, team lead approval, engineering, code review, quality, and security audit gates.
+description: Walk the human through the process of creating Jira tickets using a streamlined 3-gate pipeline (Plan, Draft, Review) with human approval gates.
 argument-hint: "[task description | gate name | resume:<gate-number>]"
 ---
 
 # Jira Skill
 
-This skill runs the 7-gate SDLC pipeline for creating Jira tickets. Read `.agents/pipelines/SDLC.md` for the full pipeline process definition, gate definitions, escalation protocol, and all process rules.
+This skill runs the 3-gate Jira pipeline for creating tickets. Read `.agents/pipelines/JIRA.md` for the full pipeline process definition, gate definitions, escalation protocol, and all process rules.
 
 **Arguments:**
-- `/jira <task description>` — Start the full pipeline from Gate 1
+- `/jira <task description>` — Start the pipeline from Gate 1
 - `/jira resume:<N> <task>` — Resume the pipeline at Gate N (e.g., after revisions)
-- `/jira gate:<name>` — Jump to a specific gate (architect, security-arch, team-lead, engineer, review, quality, audit)
-- `/jira emergency <incident>` — Expedited Chaotic-domain path (see Emergency Protocol in pipeline)
+- `/jira gate:<name>` — Jump to a specific gate (plan, draft, review)
 
 ---
 
@@ -38,11 +37,11 @@ Local requirements supplement project-level requirements. They cannot override, 
 
 ## Jira Context
 
-This skill produces **Jira ticket content** as its Gate 4 output, not code.
+This skill produces **Jira ticket content** as its output, not code.
 
-- Gate 3 blocks: No ticket content written until Gate 3 is approved
-- Gate 4 output: Jira ticket content (epics, stories, tasks, sub-tasks, acceptance criteria) + Implementation Report
-- Gate 7 final action: CREATE TICKETS (human-approved)
+- Gate 1 blocks: No ticket content drafted until Gate 1 plan is approved
+- Gate 2 output: Ticket content (epics, stories, tasks, sub-tasks, acceptance criteria) + Draft Report
+- Gate 3 final action: CREATE TICKETS (human-approved)
 
 ### Jira Concepts for Gate Agents
 
@@ -53,14 +52,10 @@ This skill produces **Jira ticket content** as its Gate 4 output, not code.
 - **Acceptance Criteria**: Conditions that must be true for a story to be considered complete. Written as testable statements.
 - **Labels / Components**: Organizational metadata. Use labels for cross-cutting concerns and components for system boundaries.
 
-### What Each Gate Produces (Jira Terms)
+### What Each Gate Produces
 
-| Gate | Standard Output | Jira Adaptation |
-|------|----------------|-----------------|
-| 1 | ADR | ADR — includes ticket decomposition strategy |
-| 2 | SAR | SAR — security review of the ticket structure and content |
-| 3 | Sprint Brief | Sprint Brief — ticket creation plan with priority order |
-| 4 | Implementation | Ticket content: epics, stories, tasks, sub-tasks, acceptance criteria |
-| 5 | Code Review | Content review: clarity, completeness, testability of acceptance criteria |
-| 6 | Quality Report | Quality review: coverage, consistency, dependency ordering |
-| 7 | Security Audit | Security audit: no sensitive data in ticket content, access controls |
+| Gate | Output |
+|------|--------|
+| 1 — Plan | Ticket Plan: Cynefin classification, decomposition strategy, security flags, open questions |
+| 2 — Draft | Ticket content: epics, stories, tasks, sub-tasks, acceptance criteria + Draft Report |
+| 3 — Review | Review Report: content quality + security check. Human approves to create tickets. |
