@@ -248,6 +248,85 @@ Structure Expectations (INFO — informational, does not FAIL)
 
 ---
 
+## Check 6: Hostname/FQDN Detection (Optional Redaction)
+
+Scan the normalized file content for patterns that match fully qualified domain names (FQDNs) and hostnames. This check is advisory — it does not FAIL the review. It detects potentially sensitive network identifiers and offers the human the option to redact them before the file is loaded.
+
+This check is **not applied by default**. The file loads with original values unless the human explicitly opts into redaction.
+
+```
+Detection Patterns
+──────────────────────────────────────────────────────────────────────
+  FQDN patterns:
+    - Strings matching the pattern: label.label.tld
+      (one or more dot-separated labels ending in a recognized or
+      plausible top-level domain)
+    - Exclude .test TLD (safe by definition per REQ-7)
+    - Exclude patterns already flagged by Check 4 as part of
+      connection strings (to avoid duplicate reporting)
+
+  Known limitations (document in NOTICE output):
+    - Bare hostnames without dots are NOT detected
+    - IP addresses (IPv4/IPv6) are NOT detected
+    - Punycode-encoded domains (xn--) are NOT detected
+    - URL-encoded hostnames are NOT detected
+    - Service discovery names and non-standard naming patterns
+      are NOT detected
+
+  This check operates on the same normalized content as Check 2.
+──────────────────────────────────────────────────────────────────────
+```
+
+```
+NOTICE Report Format
+──────────────────────────────────────────────────────────────────────
+  If hostnames/FQDNs are detected:
+    Result: PASS WITH NOTICE
+    Message format:
+      "Detected [N] FQDN-pattern hostname(s) on lines: [line numbers].
+       Note: bare hostnames, IP addresses, and non-standard naming
+       patterns are not detected by this check. Manual review is
+       recommended if complete network identifier removal is required.
+
+       Would you like to redact detected hostnames before loading?
+         Y) Redact — replace detected values with placeholders
+         N) Load as-is — no redaction (default)"
+
+  IMPORTANT: The NOTICE report must NOT echo the actual hostname
+  values. Report the count and line numbers only. The human can
+  inspect the original file to see the values. This prevents the
+  review report from becoming a secondary propagation vector.
+
+  Line number cap: If more than 10 lines contain hostnames, report
+  the first 10 line numbers followed by "... and [N] more lines."
+──────────────────────────────────────────────────────────────────────
+```
+
+```
+Redaction Behavior (when human opts in)
+──────────────────────────────────────────────────────────────────────
+  Placeholder scheme:
+    - Each unique hostname maps to an alphabetic placeholder:
+      [HOST-A], [HOST-B], [HOST-C], etc.
+    - The same hostname always maps to the same placeholder within
+      a single file, so repeated references remain internally
+      consistent.
+    - Placeholders are alphabetic, not sequential-numeric, to
+      avoid revealing ordering or exact count at a glance.
+
+  Post-redaction:
+    - The redacted content replaces the original for loading.
+    - The SHA-256 hash in Post-Review is computed on the redacted
+      content, not the original.
+    - The review log records that redaction was applied.
+
+  If no hostnames/FQDNs are detected:
+    Result: PASS (no NOTICE generated)
+──────────────────────────────────────────────────────────────────────
+```
+
+---
+
 ## Post-Review: Hash Recording (SEC-002, SEC-003 Mitigation)
 
 After the review completes:
@@ -258,7 +337,7 @@ After the review completes:
    - File path
    - Review date and time
    - SHA-256 content hash
-   - Result: PASS / PASS WITH WARNINGS / FAIL
+   - Result: PASS / PASS WITH NOTICE / PASS WITH WARNINGS / FAIL
    - Summary of findings (if any)
    - List of warnings (if any)
 
@@ -280,6 +359,9 @@ Result Logic
                                                    for human review)
   Check 4 secrets detected                      → PASS WITH WARNINGS
   Check 5 structure concerns                    → PASS (informational)
+  Check 6 hostnames/FQDNs detected              → PASS WITH NOTICE
+                                                   (human offered
+                                                   optional redaction)
 
   All checks pass with no findings              → PASS
 ──────────────────────────────────────────────────────────────────────
