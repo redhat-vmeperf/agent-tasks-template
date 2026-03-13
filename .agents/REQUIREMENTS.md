@@ -18,6 +18,7 @@ Full requirement descriptions are in `.agents/requirements/`. Each file contains
 | REQ-4 | Test file line limit: 500 lines max  | 4, 5, 6           | [REQ-004.md](requirements/REQ-004.md) |
 | REQ-5 | Security posture preservation        | 1-7 (all gates)   | [REQ-005.md](requirements/REQ-005.md) |
 | REQ-6 | External context file security review | 1-7 (all gates)   | [REQ-006.md](requirements/REQ-006.md) |
+| REQ-7 | Use .test TLD in all testing contexts | 1-7 (all gates)   | [REQ-007.md](requirements/REQ-007.md) |
 
 ---
 
@@ -35,6 +36,7 @@ REQ-3 Code 500   —        —        Visible  Enforce  REQUIRED  REQUIRED  —
 REQ-4 Test 500   —        —        Visible  Enforce  REQUIRED  REQUIRED  —
 REQ-5 Posture   REQUIRED REQUIRED Visible  Enforce  REQUIRED  REQUIRED CRIT
 REQ-6 Ext.Review REQUIRED REQUIRED Visible  Enforce  REQUIRED  REQUIRED CRIT
+REQ-7 .test TLD  REQUIRED REQUIRED REQUIRED Enforce  REQUIRED  REQUIRED CRIT
 ──────────────────────────────────────────────────────────────────────────────
 WRITE    = Agent must write/update .sdlc/ artifacts — gate cannot advance without them
 VERIFY   = Agent must verify .sdlc/ artifacts exist from prior gates — missing = BLOCKED
