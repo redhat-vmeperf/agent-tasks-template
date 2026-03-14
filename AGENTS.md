@@ -21,7 +21,10 @@ Shared agent configuration is located in `.agents/`:
 - `.agents/CYNEFIN.md` — Problem classification framework
 - `.agents/PERSONALITY.md` — Shared agent values and behavioral commitments
 - `.agents/LESSONS.md` — Lessons learned from past sessions
-- `.agents/REQUIREMENTS.md` — Non-negotiable project requirements
+- `.agents/REQUIREMENTS.md` — Non-negotiable project requirements (index)
+- `.agents/SECURITY_REVIEW_CHECKLIST.md` — Security review process for external context files
+- `.agents/pipelines/` — Pipeline process definitions (SDLC, Jira)
+- `.agents/requirements/` — Individual requirement definitions (REQ-001 through REQ-NNN)
 - `.agents/roles/` — Role-specific instructions for each SDLC gate
 
 Platform-specific configuration is located in `.claude/`.

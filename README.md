@@ -9,7 +9,13 @@ A template repository that provides a structured set of tasks, skills, and comma
   CYNEFIN.md                      Cynefin framework for problem classification
   PERSONALITY.md                  Shared values and behavioral commitments
   LESSONS.md                      Accumulated lessons from past sessions
-  REQUIREMENTS.md                 Non-negotiable project requirements
+  REQUIREMENTS.md                 Non-negotiable project requirements (index)
+  SECURITY_REVIEW_CHECKLIST.md    Security review process for external context files
+  pipelines/                      Pipeline process definitions
+    SDLC.md                       7-gate software development lifecycle pipeline
+    JIRA.md                       3-gate Jira ticket creation pipeline
+  requirements/                   Individual requirement definitions
+    REQ-001.md – REQ-NNN.md       Full requirement statements, rationale, and enforcement
   roles/                          Role-specific instructions
     ARCHITECT.md                  Architecture review
     SECURITY_ARCHITECT.md         Security architecture review
@@ -22,6 +28,8 @@ A template repository that provides a structured set of tasks, skills, and comma
 .claude/                          Claude Code platform support
   skills/                         Skill definitions
     sdlc/SKILL.md                 Full SDLC pipeline skill
+    jira/SKILL.md                 Jira ticket creation skill
+    security-review-file/SKILL.md Security review for external context files
   settings.json                   Claude Code settings
 ```
 
@@ -30,7 +38,8 @@ A template repository that provides a structured set of tasks, skills, and comma
 This template provides a framework for AI/LLM agents to follow structured workflows when performing software engineering tasks. The included configuration defines:
 
 - **Agent roles** with specialized responsibilities (architect, engineer, reviewer, etc.)
-- **Skills** that orchestrate multi-step processes with human approval gates
+- **Pipelines** that define multi-gate processes (SDLC, Jira) with human approval gates
+- **Skills** that invoke pipelines from platform-specific entry points
 - **Shared context** (personality, lessons learned, requirements) that agents load before each task
 - **A Cynefin-based classification system** to match response strategy to problem complexity
 
