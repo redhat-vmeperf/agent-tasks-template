@@ -8,9 +8,16 @@ A template repository that provides a structured set of tasks, skills, and comma
 .agents/                          Shared agent configuration
   CYNEFIN.md                      Cynefin framework for problem classification
   PERSONALITY.md                  Shared values and behavioral commitments
-  LESSONS.md                      Accumulated lessons from past sessions
+  LESSONS.md                      Accumulated lessons from past sessions (index)
   REQUIREMENTS.md                 Non-negotiable project requirements (index)
   SECURITY_REVIEW_CHECKLIST.md    Security review process for external context files
+  lessons/                        Themed lesson files
+    architecture.md               Design decisions and trade-offs
+    code-quality.md               Code standards and style
+    communication.md              Human interaction and feedback
+    implementation.md             Engineering practices
+    process.md                    Pipeline efficiency
+    security.md                   Security practices (read by all agents)
   pipelines/                      Pipeline process definitions
     SDLC.md                       7-gate software development lifecycle pipeline
     JIRA.md                       3-gate Jira ticket creation pipeline

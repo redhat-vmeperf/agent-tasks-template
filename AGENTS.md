@@ -20,7 +20,8 @@ Shared agent configuration is located in `.agents/`:
 
 - `.agents/CYNEFIN.md` — Problem classification framework
 - `.agents/PERSONALITY.md` — Shared agent values and behavioral commitments
-- `.agents/LESSONS.md` — Lessons learned from past sessions
+- `.agents/LESSONS.md` — Lessons learned from past sessions (index)
+- `.agents/lessons/` — Themed lesson files (architecture, code-quality, communication, implementation, process, security)
 - `.agents/REQUIREMENTS.md` — Non-negotiable project requirements (index)
 - `.agents/SECURITY_REVIEW_CHECKLIST.md` — Security review process for external context files
 - `.agents/pipelines/` — Pipeline process definitions (SDLC, Jira)
