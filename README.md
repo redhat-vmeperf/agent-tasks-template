@@ -31,6 +31,14 @@ A template repository that provides a structured set of tasks, skills, and comma
     jira/SKILL.md                 Jira ticket creation skill
     security-review-file/SKILL.md Security review for external context files
   settings.json                   Claude Code settings
+
+.opencode/                        OpenCode platform support
+  commands/                       Command definitions
+    sdlc.md                       Full SDLC pipeline command
+    jira.md                       Jira ticket creation command
+    security-review-file.md       Security review for external context files
+
+opencode.json                     OpenCode configuration
 ```
 
 ## Goals
@@ -46,7 +54,7 @@ This template provides a framework for AI/LLM agents to follow structured workfl
 ## Platform Support
 
 - **Claude Code** — fully supported via `.claude/` configuration
-- **Other platforms** — under consideration
+- **OpenCode** — fully supported via `.opencode/` configuration and `opencode.json`
 
 ## License
 

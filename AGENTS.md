@@ -27,4 +27,8 @@ Shared agent configuration is located in `.agents/`:
 - `.agents/requirements/` — Individual requirement definitions (REQ-001 through REQ-NNN)
 - `.agents/roles/` — Role-specific instructions for each SDLC gate
 
-Platform-specific configuration is located in `.claude/`.
+Platform-specific configuration:
+
+- `.claude/` — Claude Code skills and settings
+- `.opencode/` — OpenCode commands
+- `opencode.json` — OpenCode configuration
