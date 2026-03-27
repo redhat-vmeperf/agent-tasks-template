@@ -21,6 +21,7 @@ A template repository that provides a structured set of tasks, skills, and comma
   pipelines/                      Pipeline process definitions
     SDLC.md                       7-gate software development lifecycle pipeline
     JIRA.md                       3-gate Jira ticket creation pipeline
+    SKILLGEN.md                   4-gate skill generation pipeline
   requirements/                   Individual requirement definitions
     REQ-001.md – REQ-NNN.md       Full requirement statements, rationale, and enforcement
   roles/                          Role-specific instructions
@@ -36,6 +37,7 @@ A template repository that provides a structured set of tasks, skills, and comma
   skills/                         Skill definitions
     sdlc/SKILL.md                 Full SDLC pipeline skill
     jira/SKILL.md                 Jira ticket creation skill
+    skillgen/SKILL.md             Automatic skill generation
     security-review-file/SKILL.md Security review for external context files
   settings.json                   Claude Code settings
 
@@ -43,6 +45,7 @@ A template repository that provides a structured set of tasks, skills, and comma
   commands/                       Command definitions
     sdlc.md                       Full SDLC pipeline command
     jira.md                       Jira ticket creation command
+    skillgen.md                   Automatic skill generation
     security-review-file.md       Security review for external context files
 
 opencode.json                     OpenCode configuration

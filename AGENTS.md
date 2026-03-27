@@ -24,7 +24,7 @@ Shared agent configuration is located in `.agents/`:
 - `.agents/lessons/` — Themed lesson files (architecture, code-quality, communication, implementation, process, security)
 - `.agents/REQUIREMENTS.md` — Non-negotiable project requirements (index)
 - `.agents/SECURITY_REVIEW_CHECKLIST.md` — Security review process for external context files
-- `.agents/pipelines/` — Pipeline process definitions (SDLC, Jira)
+- `.agents/pipelines/` — Pipeline process definitions (SDLC, Jira, Skill Generation)
 - `.agents/requirements/` — Individual requirement definitions (REQ-001 through REQ-NNN)
 - `.agents/roles/` — Role-specific instructions for each SDLC gate
 

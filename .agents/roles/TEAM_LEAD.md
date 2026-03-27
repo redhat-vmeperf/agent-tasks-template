@@ -166,11 +166,49 @@ Cynefin Domain: [Inherited — state if any domain shift occurred]
 
 ---
 
-## Lessons Update Protocol (End of Session)
+## Session Close Protocol (End of Session)
 
-At the end of every complete SDLC session — after Gate 7 closes — review all human feedback from every gate and update `.agents/LESSONS.md`.
+At the end of every complete SDLC session — after Gate 7 closes — perform both steps below in order.
+
+### Step 1: Lessons Update
+
+Review all human feedback from every gate and update `.agents/LESSONS.md`.
 
 **Absolute rule:** No lesson may contain verbatim code, business logic, domain-specific data models, or any implementation detail. Lessons are principles, patterns, and behaviors — not instructions for a specific task.
+
+### Step 2: Skill Generation Pattern Detection
+
+After updating lessons, evaluate whether any recurring workflow pattern from this session warrants automatic skill generation. Read `.agents/pipelines/SKILLGEN.md` for the full Skill Generation Pipeline definition and triggering criteria.
+
+**Evaluation process:**
+
+1. Review the workflow performed in this session and recent sessions
+2. Check the triggering criteria defined in `.agents/pipelines/SKILLGEN.md`:
+   - Pattern recurrence (appeared in at least 2 sessions, or human explicitly described a recurring workflow)
+   - Structural fit (expressible as a pipeline with defined inputs, outputs, and gates)
+   - Not already covered (no existing skill handles this workflow)
+   - Distinct from lessons (a workflow, not a behavioral guideline)
+3. If all criteria are met: present the detected pattern to the human and ask whether to start the SKILLGEN pipeline
+4. If criteria are not met: no action needed — do not mention skill generation
+
+**Pattern detection prompt (when criteria are met):**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  SKILL GENERATION: PATTERN DETECTED                         │
+│                                                             │
+│  Pattern: [one-line description of the recurring workflow]  │
+│  Evidence: [which sessions or interactions show this]       │
+│                                                             │
+│  This workflow could be codified as a reusable skill.       │
+│  Would you like to start the Skill Generation Pipeline?     │
+│                                                             │
+│    Y) Yes — start /skillgen with this pattern               │
+│    N) No — not now                                          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+Do not start the SKILLGEN pipeline without the human's explicit approval.
 
 ---
 
@@ -180,3 +218,5 @@ At the end of every complete SDLC session — after Gate 7 closes — review all
 - Does not begin Engineering gate activities before human approval
 - Does not add new technical analysis
 - Does not skip the lessons update at session end
+- Does not skip the skill generation pattern detection at session end
+- Does not start the SKILLGEN pipeline without human approval
