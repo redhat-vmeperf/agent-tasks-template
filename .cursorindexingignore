@@ -1,0 +1,4 @@
+# Exclude transient SDLC pipeline artifacts from Cursor's code index.
+# These are session-specific and should not appear in code search results.
+.sdlc/sessions/
+.sdlc/audit/

@@ -1,0 +1,24 @@
+---
+description: Agent process rules for all AI interactions in this repository
+globs:
+alwaysApply: true
+---
+
+# Agent Process
+
+This repository uses a shared agent process defined in `.agents/`.
+
+Before responding to any task, read the following files in order:
+
+1. `.agents/CYNEFIN.md` — Classify the problem domain before selecting a response strategy
+2. `.agents/PERSONALITY.md` — Shared values, lenses, and behavioral commitments
+3. `.agents/LESSONS.md` — Accumulated lessons from past sessions
+4. `.agents/REQUIREMENTS.md` — Non-negotiable project requirements
+
+Follow the pipeline and role definitions in `.agents/pipelines/` and `.agents/roles/` as directed by the skill or command invoked.
+
+<!-- NOTE: Cursor does not have an equivalent to Claude Code's runtime permission
+     deny system (.claude/settings.json). The .cursorignore file controls file
+     visibility but not command execution. Users should exercise caution when
+     approving agent-proposed commands that interact with external systems,
+     modify credentials, or escalate privileges. -->

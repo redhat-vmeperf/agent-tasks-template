@@ -1,0 +1,23 @@
+# Cursor agent file access restrictions
+# Mirrors the deny patterns in .claude/settings.json to maintain
+# equivalent security posture across all supported platforms.
+#
+# When updating this file, also update .claude/settings.json deny list
+# to keep both platforms aligned.
+
+# Environment and secrets
+.env
+.env.*
+secrets/
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+
+# Git internals
+.git/
+
+# System and shell configuration
+/etc/passwd
+/etc/shadow
+/etc/sudoers
