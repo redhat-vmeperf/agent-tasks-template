@@ -20,6 +20,7 @@ Full requirement descriptions are in `.agents/requirements/`. Each file contains
 | REQ-6 | External context file security review | 1-7 (all gates)   | [REQ-006.md](requirements/REQ-006.md) |
 | REQ-7 | Use .test TLD in all testing contexts | 1-7 (all gates)   | [REQ-007.md](requirements/REQ-007.md) |
 | REQ-8 | Agent file line limit: 500 review / 750 hard *(only when modifying `.agents/` files)* | 4, 5, 6 | [REQ-008.md](requirements/REQ-008.md) |
+| REQ-9 | PQC cryptographic posture: TLS 1.3 min, PQC hybrid for greenfield, 5-source verification *(only when session involves TLS/crypto)* | 1–7 (all gates) | [REQ-009.md](requirements/REQ-009.md) |
 
 ---
 
@@ -40,6 +41,8 @@ REQ-6 Ext.Review REQUIRED REQUIRED Visible  Enforce  REQUIRED  REQUIRED CRIT
 REQ-7 .test TLD  REQUIRED REQUIRED REQUIRED Enforce  REQUIRED  REQUIRED CRIT
 REQ-8 .agents/   —        —        —        Enforce  REQUIRED  REQUIRED  —
       line limit  (only enforced when session modifies .agents/ files)
+REQ-9 PQC/TLS   REQUIRED REQUIRED Visible  Enforce  REQUIRED  REQUIRED CRIT
+      posture     (only enforced when session involves TLS/crypto)
 ──────────────────────────────────────────────────────────────────────────────
 WRITE    = Agent must write/update .sdlc/ artifacts — gate cannot advance without them
 VERIFY   = Agent must verify .sdlc/ artifacts exist from prior gates — missing = BLOCKED
