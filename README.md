@@ -2,6 +2,50 @@
 
 A template repository that provides a structured set of tasks, skills, and commands for AI/LLM agents to process. Use this repo as a starting point for new projects that leverage AI-assisted software development workflows.
 
+## Goals
+
+This template provides a framework for AI/LLM agents to follow structured workflows when performing software engineering tasks. The included configuration defines:
+
+- **Agent roles** with specialized responsibilities (architect, engineer, reviewer, etc.)
+- **Pipelines** that define multi-gate processes (SDLC, Jira) with human approval gates
+- **Skills** that invoke pipelines from platform-specific entry points
+- **Shared context** (personality, lessons learned, requirements) that agents load before each task
+- **A Cynefin-based classification system** to match response strategy to problem complexity
+
+## Platform Support
+
+- **Claude Code** — fully supported via `.claude/` configuration
+- **OpenCode** — fully supported via `.opencode/` configuration and `opencode.json`
+
+## Quickstart
+
+```bash
+mkdir new_project
+cd new_project
+
+cat <<EOF | bash
+set -ex
+REMOTE_NAME=redhat-vmeperf-agent-tasks-template
+REMOTE_URL=https://github.com/redhat-vmeperf/agent-tasks-template
+REMOTE_FILES=(.agents .claude .opencode opencode.json AGENTS.md)
+
+
+git init
+cat <<EOI >> .gitignore
+.agents
+.claude
+.opencode
+opencode.json
+EOI
+
+git remote add "\${REMOTE_NAME}" "\${REMOTE_URL}"
+git fetch --no-tags "\${REMOTE_NAME}"
+git restore --source="\${REMOTE_NAME}/main" -- \${REMOTE_FILES[@]}
+
+claude /sdlc
+EOF
+```
+
 ## Repository Structure
 
 ```
@@ -50,21 +94,6 @@ A template repository that provides a structured set of tasks, skills, and comma
 
 opencode.json                     OpenCode configuration
 ```
-
-## Goals
-
-This template provides a framework for AI/LLM agents to follow structured workflows when performing software engineering tasks. The included configuration defines:
-
-- **Agent roles** with specialized responsibilities (architect, engineer, reviewer, etc.)
-- **Pipelines** that define multi-gate processes (SDLC, Jira) with human approval gates
-- **Skills** that invoke pipelines from platform-specific entry points
-- **Shared context** (personality, lessons learned, requirements) that agents load before each task
-- **A Cynefin-based classification system** to match response strategy to problem complexity
-
-## Platform Support
-
-- **Claude Code** — fully supported via `.claude/` configuration
-- **OpenCode** — fully supported via `.opencode/` configuration and `opencode.json`
 
 ## License
 
