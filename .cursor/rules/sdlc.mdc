@@ -1,0 +1,32 @@
+---
+description: Run the full SDLC pipeline (7 gates) with human approval at each stage — use when the user asks to run SDLC, develop a feature through the pipeline, or perform gated development
+alwaysApply: false
+---
+
+# SDLC Pipeline
+
+This rule runs the 7-gate SDLC pipeline for software engineering tasks. Read `.agents/pipelines/SDLC.md` for the full pipeline process definition, gate definitions, escalation protocol, and all process rules.
+
+## Invocation
+
+- "Run SDLC for [task]" — Start the full pipeline from Gate 1
+- "Resume SDLC at gate N for [task]" — Resume the pipeline at Gate N
+- "Jump to [gate name] for [task]" — Jump to a specific gate (architect, security-arch, team-lead, engineer, review, quality, audit)
+- "Emergency SDLC for [incident]" — Expedited Chaotic-domain path (see Emergency Protocol in pipeline)
+
+If the user does not provide a task description, ask them to describe the task.
+
+## SDLC Context
+
+This pipeline produces **code, tests, and inline documentation** as its Gate 4 output.
+
+- Gate 3 blocks: No code is written until Gate 3 is approved
+- Gate 4 output: Implementation (code, tests, inline docs) + Implementation Report
+- Gate 4 instruction: Write tests alongside the code, not after
+- Gate 7 final action: MERGE / DEPLOY (human-approved)
+
+## Security
+
+- Security steps cannot be skipped.
+- No interaction with any service or system may reduce the security posture of data passing through the process (REQ-5).
+- External context files must pass a security review before loading (REQ-6). See `.agents/SECURITY_REVIEW_CHECKLIST.md`.

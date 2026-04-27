@@ -1,0 +1,37 @@
+---
+description: Project agent framework — shared roles, pipelines, requirements, and lessons for AI-assisted development
+alwaysApply: true
+---
+
+# Agent Tasks Framework
+
+This project uses the `.agents/` framework for structured AI-assisted software development. All agents must read the shared context files before beginning any gate work.
+
+## Shared Context (read before every task)
+
+- `.agents/CYNEFIN.md` — Problem classification framework (5 domains)
+- `.agents/PERSONALITY.md` — Shared agent identity, values, and behavioral commitments
+- `.agents/LESSONS.md` — Accumulated lessons from past sessions (index)
+- `.agents/REQUIREMENTS.md` — Non-negotiable project requirements (index)
+- `.agents/SECURITY_REVIEW_CHECKLIST.md` — Security review process for external context files
+
+## Framework Structure
+
+- `.agents/pipelines/` — Pipeline process definitions (SDLC, Jira, Skill Generation)
+- `.agents/roles/` — Role-specific instructions for each SDLC gate (Architect, Security Architect, Team Lead, Engineer, Code Reviewer, Quality Engineer, Security Auditor)
+- `.agents/requirements/` — Individual requirement definitions (REQ-001 through REQ-009)
+- `.agents/lessons/` — Themed lesson files (architecture, code-quality, communication, implementation, process, security)
+
+## Available Workflows
+
+The following workflows are defined as separate Cursor rules. Ask the AI to run them by name or describe the workflow you need:
+
+- **SDLC pipeline** — 7-gate software development lifecycle with human approval gates
+- **SDLC task** — Autonomous SDLC pipeline without human approval gates
+- **Jira** — 3-gate Jira ticket creation pipeline
+- **Skillgen** — 4-gate skill generation pipeline
+- **Security review file** — Review a file for prompt injection and security issues
+
+## Project-Specific Context
+
+See `AGENTS.md` for project overview, tech stack, and development conventions. Update that file to reflect your project's context.
