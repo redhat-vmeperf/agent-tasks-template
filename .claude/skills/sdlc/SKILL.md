@@ -9,6 +9,7 @@ argument-hint: "[task description | gate name | resume:<gate-number>]"
 This skill runs the 7-gate SDLC pipeline for software engineering tasks. Read `.agents/pipelines/SDLC.md` for the full pipeline process definition, gate definitions, escalation protocol, and all process rules.
 
 **Arguments:**
+
 - `/sdlc <task description>` — Start the full pipeline from Gate 1
 - `/sdlc resume:<N> <task>` — Resume the pipeline at Gate N (e.g., after revisions)
 - `/sdlc gate:<name>` — Jump to a specific gate (architect, security-arch, team-lead, engineer, review, quality, audit)
@@ -26,6 +27,7 @@ This skill produces **code, tests, and inline documentation** as its Gate 4 outp
 - Gate 7 final action: MERGE / DEPLOY (human-approved)
 
 Security of data and access controls:
+
 - Security steps cannot be skipped.
 - No interaction with any service or system may reduce the security posture of data passing through the process (REQ-5).
 - External context files must pass a security review before loading (REQ-6). See `.agents/SECURITY_REVIEW_CHECKLIST.md`.

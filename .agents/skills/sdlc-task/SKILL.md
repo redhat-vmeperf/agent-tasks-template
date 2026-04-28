@@ -46,5 +46,6 @@ See `.agents/skills/sdlc-task/PIPELINE.md` for the full pipeline process definit
 ## Invocation Context
 
 This skill may be invoked:
+
 1. Directly by a human for lower-ceremony tasks
 2. By any pipeline that needs autonomous SDLC-quality analysis without blocking

@@ -372,6 +372,7 @@ Result Logic
 ## Updating This Checklist
 
 This checklist is maintained via the standard SDLC pipeline. Changes require:
+
 1. An ADR documenting the change rationale (Gate 1)
 2. Security review of the changes (Gate 2)
 3. Human approval (Gate 3)

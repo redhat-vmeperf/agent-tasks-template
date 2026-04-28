@@ -9,6 +9,7 @@ argument-hint: "<file-path>"
 This skill reviews a file for security issues before it is loaded as additional agent context. It implements the review process defined in `.agents/SECURITY_REVIEW_CHECKLIST.md`.
 
 **Arguments:**
+
 - `/security-review-file <file-path>` — Review a specific file
 
 ---
@@ -40,7 +41,7 @@ This skill reviews a file for security issues before it is loaded as additional 
 │                                                             │
 │  Result: [PASS | PASS WITH WARNINGS | FAIL]                 │
 │  SHA-256: [hash]                                            │
-│  Date: [YYYY-MM-DD HH:MM]                                  │
+│  Date: [YYYY-MM-DD HH:MM]                                   │
 │                                                             │
 │  Findings:                                                  │
 │    [CHECK-N] [PASS|WARN|FAIL] — [description]               │

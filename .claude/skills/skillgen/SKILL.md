@@ -9,6 +9,7 @@ argument-hint: "[skill description | resume:<gate-number>]"
 This skill runs the 4-gate Skill Generation Pipeline for creating new skills from detected workflow patterns. Read `.agents/pipelines/SKILLGEN.md` for the full pipeline process definition, gate definitions, escalation protocol, and all process rules.
 
 **Arguments:**
+
 - `/skillgen <description>` — Start the pipeline from Gate 1 with a manual skill description
 - `/skillgen resume:<N> <skill>` — Resume the pipeline at Gate N (e.g., after revisions)
 - `/skillgen gate:<name>` — Jump to a specific gate (analyze, generate, security, activate)

@@ -9,6 +9,7 @@ argument-hint: "[task description | gate name | resume:<gate-number>]"
 This skill runs the 3-gate Jira pipeline for creating tickets. Read `.agents/pipelines/JIRA.md` for the full pipeline process definition, gate definitions, escalation protocol, and all process rules.
 
 **Arguments:**
+
 - `/jira <task description>` — Start the pipeline from Gate 1
 - `/jira resume:<N> <task>` — Resume the pipeline at Gate N (e.g., after revisions)
 - `/jira gate:<name>` — Jump to a specific gate (plan, draft, review)

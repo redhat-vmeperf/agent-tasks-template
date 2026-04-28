@@ -24,7 +24,7 @@ Shared agent configuration is located in `.agents/`:
 - `.agents/lessons/` — Themed lesson files (architecture, code-quality, communication, implementation, process, security)
 - `.agents/REQUIREMENTS.md` — Non-negotiable project requirements (index)
 - `.agents/SECURITY_REVIEW_CHECKLIST.md` — Security review process for external context files
-- `.agents/pipelines/` — Pipeline process definitions (SDLC, Jira, Skill Generation)
+- `.agents/pipelines/` — Pipeline process definitions (SDLC, Jira, Skill Generation, Diagram Alignment)
 - `.agents/requirements/` — Individual requirement definitions (REQ-001 through REQ-NNN)
 - `.agents/roles/` — Role-specific instructions for each SDLC gate
 
@@ -34,3 +34,10 @@ Platform-specific configuration:
 - `.cursor/` — Cursor IDE rules
 - `.opencode/` — OpenCode commands
 - `opencode.json` — OpenCode configuration
+
+Pre-commit and CI tooling:
+
+- `scripts/verify-diagram-alignment.py` — Deterministic diagram alignment linter
+- `scripts/ai-review.py` — AI-powered pre-commit review hook (persona, diagram, sdlc phases)
+- `scripts/prompts/` — Prompt templates for AI review phases
+- `.pre-commit-config.yaml` — Pre-commit hook configuration (file hygiene, AI review, diagram lint)

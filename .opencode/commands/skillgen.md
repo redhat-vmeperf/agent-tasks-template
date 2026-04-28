@@ -8,6 +8,7 @@ Load the `skillgen` skill and execute it with the following arguments: $ARGUMENT
 If no arguments are provided, ask the user to describe the skill they want to generate, or describe the recurring workflow pattern they want to codify.
 
 Arguments reference:
+
 - `/skillgen <description>` — Start the pipeline from Gate 1 with a manual skill description
 - `/skillgen resume:<N> <skill>` — Resume the pipeline at Gate N (e.g., after revisions)
 - `/skillgen gate:<name>` — Jump to a specific gate (analyze, generate, security, activate)

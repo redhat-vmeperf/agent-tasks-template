@@ -19,6 +19,7 @@ All agents in this organization must classify the problem domain before selectin
 - **Respond:** Apply the established best practice
 
 **Signals:**
+
 - Proven procedure exists and reliably produces the correct output
 - Team has handled this exact class of problem repeatedly
 - Outcome of applying the procedure is predictable in advance
@@ -32,6 +33,7 @@ All agents in this organization must classify the problem domain before selectin
 **WARNING — The Clear→Chaotic Cliff:** The Clear domain is the most dangerous. Success breeds complacency. Complacency reduces environmental scanning. The boundary between Clear and Chaotic is a catastrophic cliff, not a gradual slope. There is no warning zone. Systems that have been stable under Clear practices can collapse into Chaos without advance notice when conditions change but practices do not.
 
 Signals that the cliff is approaching:
+
 - Increasing frequency of exceptions to standard procedures
 - Growing reliance on undocumented workarounds
 - Expert practitioners quietly doubting standard approaches
@@ -53,6 +55,7 @@ Mitigations: Maintain active dissent channels. Periodically review whether best 
 - **Respond:** Implement the selected solution from a range of good options
 
 **Signals:**
+
 - Problem is deterministic — given enough analysis, the answer is knowable
 - Expert communities have established bodies of knowledge applicable here
 - Multiple correct approaches exist, with articulable trade-offs
@@ -78,6 +81,7 @@ Mitigations: Maintain active dissent channels. Periodically review whether best 
 **Safe-to-fail probes** are not "safe enough to try" risk decisions. They are specifically designed to be small and bounded so that failure does not cascade. The emphasis is not on ensuring success — it is on allowing unhelpful ideas to fail in contained, tolerable ways. Run multiple probes in parallel; the emergent behavior may differ across variations.
 
 **Signals:**
+
 - Requirements will change as users interact with the solution
 - The team has never done anything like this before
 - Competing experts disagree on fundamental approach
@@ -104,6 +108,7 @@ Mitigations: Maintain active dissent channels. Periodically review whether best 
 **Acting first is not recklessness — it is the correct epistemic response to a system providing no coherent signal.**
 
 **Signals:**
+
 - Active system failure with unknown root cause
 - Multiple simultaneous failures that prevent isolation
 - Normal channels of communication and escalation are broken or overloaded
@@ -127,6 +132,7 @@ Mitigations: Maintain active dissent channels. Periodically review whether best 
 The "aporetic turn": find the lowest level of coherence in the situation and route each component out to the appropriate domain separately. Decompose aggressively until each piece has a clear domain signal.
 
 **Failure mode in Disorder:** Defaulting to comfort.
+
 - Bureaucrats perceive everything as Clear (apply the procedure)
 - Engineers perceive everything as Complicated (let me analyze this)
 - Innovators perceive everything as Complex (let's experiment)
@@ -160,14 +166,17 @@ If any fail: proceed to Tier 3.
 ### Tier 3: Complicated vs. Complex
 
 **Test A — Determinism:** If all relevant information were gathered and expert analysis applied, would a single correct (or clearly better) answer emerge?
+
 - Yes → **Complicated**
 - No (depends on emergent behavior, user adoption, market response) → **Complex**
 
 **Test B — Hypothesis testability:** Can a hypothesis be formulated and tested without running the actual system?
+
 - Yes (can reason about it, model it, analyze it) → **Complicated**
 - No (must run the system to find out) → **Complex**
 
 **Test C — Expert consensus:** Would domain experts analyzing the same information reach high agreement on approach?
+
 - Yes → **Complicated**
 - No (fundamentally different mental models) → **Complex**
 
@@ -200,12 +209,14 @@ If any fail: proceed to Tier 3.
 ## Response Calibration by Domain
 
 **Clear response pattern:**
+
 - High confidence, direct recommendation
 - Reference the applicable best practice or standard
 - No hedging beyond known exceptions
 - Offer to automate or template
 
 **Complicated response pattern:**
+
 - Present structured analysis of the option space
 - Identify trade-offs for the specific context
 - Make a recommendation with explicit reasoning
@@ -213,6 +224,7 @@ If any fail: proceed to Tier 3.
 - Invite expert review of the analysis
 
 **Complex response pattern:**
+
 - Acknowledge inherent uncertainty; do not fake confidence
 - Frame the engagement as a probe, not a solution
 - Propose multiple small experiments rather than a single recommended approach
@@ -220,6 +232,7 @@ If any fail: proceed to Tier 3.
 - Commit to iteration
 
 **Chaotic response pattern:**
+
 - Prioritize stabilization over understanding
 - Provide the fastest path to "less bad" even if imperfect
 - Communicate clearly about what is known vs. unknown
@@ -227,6 +240,7 @@ If any fail: proceed to Tier 3.
 - Flag the transition point: "Once stable, apply Complicated protocol"
 
 **Disorder response pattern:**
+
 - Do not attempt to answer the full question as stated
 - Explicitly name the classification problem
 - Decompose into sub-questions with clearer domain signals

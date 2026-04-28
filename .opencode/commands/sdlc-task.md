@@ -8,4 +8,5 @@ Load the `sdlc-task` skill and execute it with the following arguments: $ARGUMEN
 If no arguments are provided, ask the user to describe the task they want to run through the autonomous SDLC pipeline.
 
 Arguments reference:
+
 - `/sdlc-task <task description>` — Run the full autonomous pipeline

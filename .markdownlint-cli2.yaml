@@ -1,0 +1,54 @@
+# markdownlint-cli2 configuration
+#
+# This repo uses extensive code fences, UTF-8 box-drawing characters,
+# tables, and inline code in markdown files. Rules are tuned accordingly.
+#
+# Start permissive, tighten over time.
+
+config:
+  # MD013 — Line length. Disabled because this repo uses wide tables,
+  # box-drawing diagrams, and long inline code spans that cannot be
+  # wrapped without breaking formatting.
+  MD013: false
+
+  # MD024 — Multiple headings with the same content. Allowed because
+  # role files and pipeline files reuse heading names across sections
+  # (e.g., "## Revision History" appears in multiple format specs).
+  MD024: false
+
+  # MD033 — Inline HTML. Disabled because some markdown files may
+  # contain HTML comments (<!-- Session: YYYY-MM-DD -->) for metadata.
+  MD033: false
+
+  # MD040 — Fenced code blocks should have a language specified.
+  # Disabled because many code fences in this repo contain ASCII
+  # diagrams, pseudo-code, or structured text that has no language.
+  MD040: false
+
+  # MD041 — First line in a file should be a top-level heading.
+  # Disabled because some files start with YAML frontmatter or
+  # metadata comments.
+  MD041: false
+
+  # MD036 — Emphasis used instead of a heading. Disabled because
+  # this repo uses bold text for emphasis in standalone paragraphs
+  # (e.g., quotes, cardinal rules) which are not intended as headings.
+  MD036: false
+
+  # MD046 — Code block style. Allow both fenced and indented.
+  MD046: false
+
+  # MD049/MD050 — Emphasis/strong style. Allow both * and _ forms.
+  MD049: false
+  MD050: false
+
+  # MD060 — Table column style. Disabled because this repo uses both
+  # compact and aligned table styles depending on context.
+  MD060: false
+
+# Glob patterns for files to ignore
+ignores:
+  - ".sdlc/**"
+  - "temp/**"
+  - "node_modules/**"
+  - ".git/**"

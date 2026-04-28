@@ -1,0 +1,82 @@
+# Pre-commit hook configuration
+#
+# Install: pip install pre-commit && pre-commit install
+#
+# SEC-006: Revisions are pinned to commit SHAs. To update to the
+# latest patch within each major version:
+#   python3 scripts/update-pinned-shas.py
+
+minimum_pre_commit_version: 3.3.0
+fail_fast: true
+
+repos:
+  # ── Phase: Secret Detection ────────────────────────────────
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: 83d9cd684c87d95d656c1458ef04895a7f1cbd8e  # v8.30.1
+    hooks:
+      - id: gitleaks
+
+  # ── Phase: File Hygiene ────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # v5.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+
+  # ── Phase: Markdown Linting ────────────────────────────────
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: 996abf60411a8d954288ac9856aae7602b80cbda  # v0.22.1
+    hooks:
+      - id: markdownlint-cli2
+
+  # ── Phase: AI-Powered Review ───────────────────────────────
+  # These hooks invoke a configurable AI CLI (claude, opencode, etc.)
+  # to review staged changes. Configure via environment variables:
+  #   AI_REVIEW_CLI=claude      (or opencode, or any CLI name)
+  #   AI_REVIEW_STRICT=true     (fail if CLI unavailable; default: false)
+  #   AI_REVIEW_TIMEOUT=300     (overrides per-phase defaults: persona=300, sdlc=600)
+  #   AI_REVIEW_CUSTOM="cmd"    (custom CLI command; prompt via stdin)
+  #
+  # Data flow notice (SEC-002): These hooks send the staged diff
+  # content to the configured AI provider's API. See CONTRIBUTING.md
+  # for details.
+  - repo: local
+    hooks:
+      - id: ai-persona-review
+        name: AI Condensed Persona Review
+        entry: python3 scripts/ai-review.py persona
+        language: python
+        types: [text]
+        stages: [pre-commit]
+        pass_filenames: false
+        verbose: true
+
+      - id: ai-sdlc-review
+        name: AI SDLC Pipeline Self-Review
+        entry: python3 scripts/ai-review.py sdlc
+        language: python
+        types: [text]
+        stages: [pre-commit]
+        pass_filenames: false
+        verbose: true
+
+      - id: ai-diagram-review
+        name: AI Diagram Alignment Review
+        entry: python3 scripts/ai-review.py diagram
+        language: python
+        types: [text]
+        stages: [pre-commit]
+        pass_filenames: false
+        verbose: true
+
+      - id: diagram-alignment
+        name: Diagram Alignment Lint
+        entry: python3 scripts/verify-diagram-alignment.py --exclude .agents/pipelines/DIAGRAM_ALIGNMENT.md
+        language: python
+        types: [markdown]
+        stages: [pre-commit]

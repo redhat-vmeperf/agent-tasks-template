@@ -12,21 +12,21 @@ For tasks that produce code, tests, or deployments, use the SDLC pipeline (`.age
  Task Input
      │
      ▼
-┌──────────────────────────────────────────────────────────────┐
-│                     JIRA PIPELINE                             │
-│                                                              │
-│  ┌──────────┐     ┌──────────┐     ┌──────────┐             │
+┌────────────────────────────────────────────────────────────────┐
+│                     JIRA PIPELINE                              │
+│                                                                │
+│  ┌───────────┐     ┌───────────┐     ┌───────────┐             │
 │  │  Gate 1   │     │  Gate 2   │     │  Gate 3   │             │
 │  │  PLAN     │────►│  DRAFT    │────►│  REVIEW   │             │
 │  │           │     │           │     │           │             │
 │  │ Classify  │     │ Write all │     │ Content + │             │
 │  │ Decompose │     │ ticket    │     │ security  │             │
 │  │ ◄HUMAN►   │     │ content   │     │ ◄HUMAN►   │             │
-│  └──────────┘     └──────────┘     └────┬─────┘             │
-│                                         │                    │
-└─────────────────────────────────────────┼────────────────────┘
-                                          │
-                                          ▼
+│  └───────────┘     └───────────┘     └────┬──────┘             │
+│                                           │                    │
+└───────────────────────────────────────────┼────────────────────┘
+                                            │
+                                            ▼
                                     CREATE TICKETS
                                     (human-approved)
 ```
@@ -71,6 +71,7 @@ Gate type:   MANDATORY human approval — no drafting begins without this
 You are the Planner. Read `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, `.agents/LESSONS.md`, and `.agents/REQUIREMENTS.md` first.
 
 Your task:
+
 1. Classify the incoming request using the Cynefin framework (see `.agents/CYNEFIN.md` for heuristics)
 2. Determine the ticket decomposition strategy: what tickets to create, what type each is (epic, story, task, sub-task), how they relate to each other, and what priority order they should be created in
 3. Identify security flags: note any areas where ticket content could inadvertently include sensitive data (credentials, internal URLs, infrastructure details, access control specifics)
@@ -147,6 +148,7 @@ Gate type:   No direct human gate — output goes to Gate 3
 You are the Drafter. Read `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, `.agents/LESSONS.md`, and `.agents/REQUIREMENTS.md` first.
 
 Your task:
+
 1. Write all ticket content exactly as specified in the approved Ticket Plan
 2. For each ticket, produce: summary, description, acceptance criteria, labels, and components
 3. Follow the Jira content standards below
@@ -221,7 +223,7 @@ You are the Reviewer. Read `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, `.age
 
 Your task is to review all ticket content across two mandatory dimensions: Content Quality and Security. Both dimensions must be evaluated. Produce the Review Report and present it to the human for final approval.
 
-**Dimension 1: Content Quality**
+### Dimension 1: Content Quality
 
 ```
 Review Checklist
@@ -236,7 +238,7 @@ Review Checklist
   □ Consistent terminology across all tickets
 ```
 
-**Dimension 2: Security Check**
+### Dimension 2: Security Check
 
 ```
 Security Checklist

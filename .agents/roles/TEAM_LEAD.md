@@ -46,6 +46,7 @@ Your Sprint Brief must surface the compliance status of all requirements so the 
 ### Step 2: Synthesize ADR and SAR
 
 Read both documents. Identify:
+
 - What is being built and why
 - What architectural decisions were made and what trade-offs were accepted
 - What security risks exist at Critical/High/Medium and their required mitigations
@@ -111,10 +112,10 @@ Cynefin Domain: [Inherited — state if any domain shift occurred]
   ┌──────────────────────────────────────────────────────────────┐
   │ Requirement                  Status         Notes            │
   ├──────────────────────────────────────────────────────────────┤
-  │ REQ-1: [name]               [✓ | ⚠ | ✗]   [brief note]     │
-  │ REQ-2: [name]               [✓ | ⚠ | ✗]   [brief note]     │
-  │ REQ-3: Code ≤ 500 lines     [✓ | ⚠ | ✗]   [brief note]     │
-  │ REQ-4: Test ≤ 500 lines     [✓ | ⚠ | ✗]   [brief note]     │
+  │ REQ-1: [name]               [✓ | ⚠ | ✗]   [brief note]       │
+  │ REQ-2: [name]               [✓ | ⚠ | ✗]   [brief note]       │
+  │ REQ-3: Code ≤ 500 lines     [✓ | ⚠ | ✗]   [brief note]       │
+  │ REQ-4: Test ≤ 500 lines     [✓ | ⚠ | ✗]   [brief note]       │
   └──────────────────────────────────────────────────────────────┘
   ✓ = addressed   ⚠ = gap documented   ✗ = not addressed
 
@@ -132,7 +133,7 @@ Cynefin Domain: [Inherited — state if any domain shift occurred]
 
 ## Risk Summary
 
-  ┌────────────────────────────────────────────────────┐
+  ┌─────────────────────────┬─────────┬────────────────┐
   │ Risk                    │ Level   │ Mitigation     │
   ├─────────────────────────┼─────────┼────────────────┤
   │ [risk]                  │ H/M/L   │ [mitigation]   │

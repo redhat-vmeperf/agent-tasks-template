@@ -9,6 +9,7 @@ argument-hint: "[task description]"
 This skill runs the 7-gate SDLC pipeline without human approval gates. Read `.agents/skills/sdlc-task/PIPELINE.md` for the full pipeline process definition.
 
 **Arguments:**
+
 - `/sdlc-task <task description>` — Run the full autonomous pipeline
 
 ---
@@ -25,6 +26,7 @@ This skill produces the same artifacts as `/sdlc` — **code, tests, inline docu
 - Output: Consolidated Report summarizing all gates and re-evaluation cycles
 
 Security of data and access controls:
+
 - Security roles still execute their full analysis
 - No interaction with any service or system may reduce the security posture of data passing through the process (REQ-5)
 - External context files must pass a security review before loading (REQ-6)

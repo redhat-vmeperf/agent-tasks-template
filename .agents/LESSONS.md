@@ -37,8 +37,8 @@ Before producing your artifact, read the theme files relevant to your role and t
 8. Do not record any lesson that would require quoting verbatim code, business logic, domain-specific data models, or any other project-specific implementation detail. All lessons must be generic and transferable to future tasks.
 9. Human is required to approve all lesson changes, do not auto approve these changes.
 
-
 **Lesson format:**
+
 ```
 - [Theme] Pattern of feedback observed -> What to do differently -> Why it matters
 ```

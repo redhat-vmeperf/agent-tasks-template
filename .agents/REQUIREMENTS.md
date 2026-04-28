@@ -57,6 +57,7 @@ Visible  = Team Lead surfaces in Sprint Brief
 ## Updating This File
 
 This file is maintained by the human stakeholder or principal architect. Changes require:
+
 1. A new ADR documenting the change rationale (Gate 1)
 2. Human approval at Gate 3 before the change takes effect
 3. A note in `.agents/LESSONS.md` under Cross-Cutting lessons if the change reflects a learned pattern

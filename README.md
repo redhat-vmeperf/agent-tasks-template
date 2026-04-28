@@ -7,8 +7,9 @@ A template repository that provides a structured set of tasks, skills, and comma
 This template provides a framework for AI/LLM agents to follow structured workflows when performing software engineering tasks. The included configuration defines:
 
 - **Agent roles** with specialized responsibilities (architect, engineer, reviewer, etc.)
-- **Pipelines** that define multi-gate processes (SDLC, Jira) with human approval gates
+- **Pipelines** that define multi-gate processes (SDLC, Jira, Diagram Alignment) with human approval gates
 - **Skills** that invoke pipelines from platform-specific entry points
+- **Pre-commit hooks** with deterministic linting and AI-powered review (persona, diagram, SDLC)
 - **Shared context** (personality, lessons learned, requirements) that agents load before each task
 - **A Cynefin-based classification system** to match response strategy to problem complexity
 
@@ -68,6 +69,7 @@ EOF
     SDLC.md                       7-gate software development lifecycle pipeline
     JIRA.md                       3-gate Jira ticket creation pipeline
     SKILLGEN.md                   4-gate skill generation pipeline
+    DIAGRAM_ALIGNMENT.md          Diagram alignment verification rules and examples
   requirements/                   Individual requirement definitions
     REQ-001.md – REQ-NNN.md       Full requirement statements, rationale, and enforcement
   roles/                          Role-specific instructions
@@ -82,9 +84,11 @@ EOF
 .claude/                          Claude Code platform support
   skills/                         Skill definitions
     sdlc/SKILL.md                 Full SDLC pipeline skill
+    sdlc-task/SKILL.md            Autonomous SDLC pipeline skill
     jira/SKILL.md                 Jira ticket creation skill
     skillgen/SKILL.md             Automatic skill generation
     security-review-file/SKILL.md Security review for external context files
+    diagram-alignment/SKILL.md    Diagram alignment verification skill
   settings.json                   Claude Code settings
 
 .cursor/                          Cursor IDE platform support
@@ -100,11 +104,25 @@ EOF
 .opencode/                        OpenCode platform support
   commands/                       Command definitions
     sdlc.md                       Full SDLC pipeline command
+    sdlc-task.md                  Autonomous SDLC pipeline command
     jira.md                       Jira ticket creation command
     skillgen.md                   Automatic skill generation
     security-review-file.md       Security review for external context files
+    diagram-alignment.md          Diagram alignment verification command
 
 opencode.json                     OpenCode configuration
+
+scripts/                          CI and pre-commit tooling
+  verify-diagram-alignment.py     Deterministic diagram alignment linter
+  ai-review.py                    AI-powered pre-commit review hook
+  prompts/                        Prompt templates for AI review phases
+    persona-review.md             7-persona condensed review prompt
+    sdlc-review.md                Full SDLC pipeline review prompt
+    diagram-review.md             Diagram alignment review prompt
+  update-pinned-shas.py           Updates pinned SHAs in CI and pre-commit configs
+
+.pre-commit-config.yaml           Pre-commit hook configuration
+.github/workflows/ci.yml          GitHub Actions CI workflow
 ```
 
 ## License

@@ -59,6 +59,55 @@ configuration errors before deployment.
 Generated-by: Claude <noreply@anthropic.com>
 ```
 
+## Pre-commit Hooks
+
+This project uses [pre-commit](https://pre-commit.com/) to enforce consistency, catch errors, and review changes before they reach the remote.
+
+### Setup
+
+```
+pip install pre-commit
+pre-commit install
+```
+
+### What Runs
+
+| Hook | Purpose |
+|------|---------|
+| check-merge-conflict | Detect merge conflict markers |
+| trailing-whitespace | Fix trailing whitespace (preserves MD linebreaks) |
+| end-of-file-fixer | Ensure files end with newline |
+| check-yaml / check-json / check-toml | Validate config file syntax |
+| markdownlint-cli2 | Markdown linting |
+| gitleaks | Secret detection (pattern-based) |
+| ai-persona-review | AI-powered condensed 7-persona review |
+| ai-sdlc-review | AI-powered SDLC pipeline self-review |
+
+### AI Review Hooks — Data Flow Notice
+
+The `ai-persona-review` and `ai-sdlc-review` hooks send the **staged git diff** to the configured AI provider's API for analysis. This means the content of your changes is transmitted to a third-party service.
+
+- The AI CLI tool is configurable via the `AI_REVIEW_CLI` environment variable
+- Supported tools: `claude`, `opencode`, or any custom CLI via `AI_REVIEW_CUSTOM`
+- If no AI CLI is available, the hooks warn and pass (non-blocking by default)
+- Set `AI_REVIEW_STRICT=true` to make AI review mandatory (hooks fail if CLI is unavailable)
+- Set `AI_REVIEW_TIMEOUT` to override per-phase defaults (persona: 300s, sdlc: 600s)
+- To avoid external data transmission entirely, use a local model
+
+The conventional hooks (file hygiene, markdownlint, gitleaks) run entirely locally and make no network calls at runtime.
+
+### CI Workflow
+
+The CI workflow (`.github/workflows/ci.yml`) runs pre-commit hooks on pushes to main and pull requests. Both CI actions and pre-commit hooks are pinned to commit SHAs for supply chain integrity.
+
+To update all pinned SHAs to the latest patch within each major release:
+
+```
+python scripts/update-pinned-shas.py
+```
+
+This updates both `.github/workflows/ci.yml` and `.pre-commit-config.yaml`, resolving each reference to the latest `vN.y.z` within its major version and pinning the commit SHA.
+
 ## Commit Messages
 
 - Write clear, concise commit subjects (50 characters or less)

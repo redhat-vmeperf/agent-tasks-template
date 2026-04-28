@@ -15,19 +15,19 @@ Skills that use this pipeline define their own metadata, arguments, context sect
 ┌────────────────────────────────────────────────────────────────┐
 │                     SDLC PIPELINE                              │
 │                                                                │
-│  ┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐       │
-│  │ Gate 1  │   │ Gate 2  │   │ Gate 3  │   │ Gate 4  │       │
-│  │ARCHITECT│──►│SEC.ARCH │──►│TEAM LEAD│──►│ENGINEER │       │
-│  │  ADR    │   │  SAR    │   │ BRIEF   │   │  IMPL   │       │
-│  │ ◄HUMAN► │   │ ◄HUMAN► │   │◄HUMAN► │   │         │       │
-│  └─────────┘   └─────────┘   └─────────┘   └────┬────┘       │
-│                                                  │            │
-│  ┌─────────┐   ┌─────────┐   ┌─────────┐        │            │
-│  │ Gate 7  │   │ Gate 6  │   │ Gate 5  │        │            │
-│  │SEC.AUDIT│◄──│QUALITY  │◄──│CODE REV │◄───────┘            │
-│  │ REPORT  │   │ REPORT  │   │ REPORT  │                     │
-│  │◄HUMAN►  │   │ ◄HUMAN► │   │ ◄HUMAN► │                     │
-│  └────┬────┘   └─────────┘   └─────────┘                     │
+│  ┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐         │
+│  │ Gate 1  │   │ Gate 2  │   │ Gate 3  │   │ Gate 4  │         │
+│  │ARCHITECT│──►│SEC.ARCH │──►│TEAM LEAD│──►│ENGINEER │         │
+│  │  ADR    │   │  SAR    │   │ BRIEF   │   │  IMPL   │         │
+│  │ ◄HUMAN► │   │ ◄HUMAN► │   │ ◄HUMAN► │   │         │         │
+│  └─────────┘   └─────────┘   └─────────┘   └────┬────┘         │
+│                                                 │              │
+│  ┌─────────┐   ┌─────────┐   ┌─────────┐        │              │
+│  │ Gate 7  │   │ Gate 6  │   │ Gate 5  │        │              │
+│  │SEC.AUDIT│◄──│QUALITY  │◄──│CODE REV │◄───────┘              │
+│  │ REPORT  │   │ REPORT  │   │ REPORT  │                       │
+│  │◄HUMAN►  │   │ ◄HUMAN► │   │ ◄HUMAN► │                       │
+│  └────┬────┘   └─────────┘   └─────────┘                       │
 │       │                                                        │
 └───────┼────────────────────────────────────────────────────────┘
         │
@@ -78,6 +78,7 @@ Blocking:    Revisions route back to Gate 1 before Gate 2 begins
 You are acting as the Architect. Read `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, and `.agents/LESSONS.md` first. Then read `.agents/roles/ARCHITECT.md` for your role-specific protocol.
 
 Your task:
+
 1. Classify the incoming request using the Cynefin framework
 2. Produce a complete Architecture Decision Record (ADR)
 3. Include a UTF-8 diagram of the component/data flow structure
@@ -119,6 +120,7 @@ Blocking:    Critical/High/Medium findings block Gate 3 until mitigated
 You are acting as the Security Architect. Read `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, and `.agents/LESSONS.md` first. Then read `.agents/roles/SECURITY_ARCHITECT.md` for your role-specific protocol.
 
 Your task:
+
 1. Map the attack surface from the approved ADR
 2. Apply STRIDE threat modeling to every component and trust boundary
 3. Evaluate against the security principles checklist
@@ -126,6 +128,7 @@ Your task:
 5. Produce the SAR
 
 Severity policy:
+
 - Critical / High / Medium: MUST be mitigated before Gate 3 advances
 - Low / Info: presented to the human for a decision at this gate
 
@@ -164,6 +167,7 @@ Gate type:   MANDATORY human approval — no implementation begins without this
 You are acting as the Team Lead. Read `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, and `.agents/LESSONS.md` first. Then read `.agents/roles/TEAM_LEAD.md` for your role-specific protocol.
 
 Your task:
+
 1. Synthesize the approved ADR and SAR into a one-page Sprint Brief
 2. Surface all unresolved risks and decisions
 3. Present a go/no-go recommendation with reasoning
@@ -180,7 +184,7 @@ Do not advance to Gate 4 until a human explicitly approves. Do not interpret sil
 │  Please select:                                             │
 │    A) Approve — proceed to Engineering                      │
 │    B) Approve with conditions — list conditions             │
-│    C) No-go — return to Gate [N] with reason               │
+│    C) No-go — return to Gate [N] with reason                │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -200,6 +204,7 @@ Gate type:   No direct human gate — output goes to Gate 5
 You are acting as the Engineer. Read `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, and `.agents/LESSONS.md` first. Then read `.agents/roles/ENGINEER.md` for your role-specific protocol.
 
 Your task:
+
 1. Verify all pre-implementation checklist items
 2. Implement the approved design exactly
 3. Produce the Implementation Report
@@ -290,6 +295,7 @@ Blocking:    Critical/High/Medium findings block approval
 You are acting as the Security Auditor. Read `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, and `.agents/LESSONS.md` first. Then read `.agents/roles/SECURITY_AUDITOR.md` for your role-specific protocol.
 
 Your task:
+
 1. Verify Gates 5 and 6 required changes are resolved
 2. Read the approved SAR (Gate 2) — know what was already addressed
 3. Perform a full adversarial security review against all audit dimensions
