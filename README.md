@@ -15,6 +15,7 @@ This template provides a framework for AI/LLM agents to follow structured workfl
 ## Platform Support
 
 - **Claude Code** — fully supported via `.claude/` configuration
+- **Cursor IDE** — fully supported via `.cursor/rules/` configuration
 - **OpenCode** — fully supported via `.opencode/` configuration and `opencode.json`
 
 ## Quickstart
@@ -27,13 +28,14 @@ cat <<EOF | bash
 set -ex
 REMOTE_NAME=redhat-vmeperf-agent-tasks-template
 REMOTE_URL=https://github.com/redhat-vmeperf/agent-tasks-template
-REMOTE_FILES=(.agents .claude .opencode opencode.json AGENTS.md)
+REMOTE_FILES=(.agents .claude .cursor .opencode opencode.json AGENTS.md)
 
 
 git init
 cat <<EOI >> .gitignore
 .agents
 .claude
+.cursor
 .opencode
 opencode.json
 EOI
@@ -84,6 +86,16 @@ EOF
     skillgen/SKILL.md             Automatic skill generation
     security-review-file/SKILL.md Security review for external context files
   settings.json                   Claude Code settings
+
+.cursor/                          Cursor IDE platform support
+  rules/                          Rule definitions
+    project.mdc                   Project context (always applied)
+    security-guidelines.mdc       Security restrictions (always applied)
+    sdlc.mdc                      Full SDLC pipeline rule
+    sdlc-task.mdc                 Autonomous SDLC pipeline rule
+    jira.mdc                      Jira ticket creation rule
+    skillgen.mdc                  Automatic skill generation rule
+    security-review-file.mdc      Security review for external context files
 
 .opencode/                        OpenCode platform support
   commands/                       Command definitions

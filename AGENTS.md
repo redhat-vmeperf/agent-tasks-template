@@ -31,5 +31,6 @@ Shared agent configuration is located in `.agents/`:
 Platform-specific configuration:
 
 - `.claude/` — Claude Code skills and settings
+- `.cursor/` — Cursor IDE rules
 - `.opencode/` — OpenCode commands
 - `opencode.json` — OpenCode configuration

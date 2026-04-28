@@ -1,0 +1,49 @@
+---
+description: Security restrictions and command safety guidelines — equivalent to permission deny/ask rules
+alwaysApply: true
+---
+
+# Security Guidelines
+
+Cursor does not enforce permissions at the IDE level. Adherence to these guidelines is a behavioral commitment that protects the project's security posture.
+
+## Commands — NEVER execute
+
+- Network: `curl`, `wget`, `nc`, `ncat`, `netcat`, `ssh`, `scp`, `sftp`, `rsync`
+- Privilege escalation: `sudo`, `su`, `doas`, `pkexec`, `runuser`, `newgrp`
+- Destructive: `chmod 777`, `rm -rf`
+- Temp/scheduling: `mktemp`, `crontab`, `at`
+- System management: `systemctl`, `service`
+- Containers/cloud: `docker`, `podman`, `kubectl`, `terraform`, `aws`, `gcloud`, `az`
+- Code execution: `python3 -c`, `python3 -m http.server`, `eval`, `exec`
+- Shell config: `source /etc/*`, `source ~/.bashrc`, `source ~/.zshrc`
+
+## Commands — ASK the user before executing
+
+- `git push`
+- `git rebase`
+- `git reset`
+- `git merge`
+
+## Files — NEVER read
+
+- `.env`, `.env.*`
+- `secrets/**`
+- `*.pem`, `*.key`, `*.p12`, `*.pfx`
+- `~/.ssh/**`, `~/.aws/**`, `~/.azure/**`, `~/.kube/**`, `~/.gnupg/**`
+- `~/.docker/config.json`, `~/.netrc`
+- `/etc/passwd`, `/etc/shadow`, `/etc/sudoers`
+
+## Files — NEVER edit
+
+- `.git/**`
+- `/etc/**`, `/usr/**`, `/bin/**`
+- `~/.bashrc`, `~/.zshrc`, `~/.profile`, `~/.ssh/**`
+
+## Web fetching — DISABLED
+
+Do not fetch external URLs.
+
+## Telemetry
+
+Disable telemetry when available. Do not send data to external services unless explicitly requested.

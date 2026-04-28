@@ -1,0 +1,31 @@
+---
+description: Run the full SDLC pipeline autonomously without human approval gates — all 7 roles execute and self-correct, producing a consolidated report
+alwaysApply: false
+---
+
+# SDLC Task (Autonomous)
+
+This rule runs the 7-gate SDLC pipeline without human approval gates. Read `.agents/skills/sdlc-task/PIPELINE.md` for the full pipeline process definition.
+
+## Invocation
+
+- "Run SDLC task for [task]" — Run the full autonomous pipeline
+
+If the user does not provide a task description, ask them to describe the task.
+
+## SDLC Task Context
+
+This pipeline produces the same artifacts as the gated SDLC — **code, tests, inline documentation, and all gate reports** — but without blocking on human approval at any gate.
+
+- All 7 roles execute in sequence (Architect through Security Auditor)
+- All gate artifacts are produced (ADR, SAR, Sprint Brief, Implementation Report, Code Review, Quality Report, Security Audit)
+- Self-correction: discoveries that change architecture, scope, or security posture loop back to Gate 1 (max 2 cycles)
+- Finding mitigation is driven by the invoker's directions — findings within scope are mitigated, findings outside scope are flagged
+- Audit trail entries are marked `UNGATED`
+- Output: Consolidated Report summarizing all gates and re-evaluation cycles
+
+## Security
+
+- Security roles still execute their full analysis.
+- No interaction with any service or system may reduce the security posture of data passing through the process (REQ-5).
+- External context files must pass a security review before loading (REQ-6).
