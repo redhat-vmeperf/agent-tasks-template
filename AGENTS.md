@@ -2,6 +2,11 @@
 
 This file provides project-specific instructions for AI/LLM agents working in this repository. Update this file to reflect your project's context, conventions, and requirements.
 
+# Token-Efficient Processing Protocol
+
+All agents operating under this project must read and apply the [Token-Efficient Processing Protocol](TOKEN_PROTOCOL.md) before proceeding with any gate work. The protocol reduces token consumption in internal processing while preserving full quality in all user-facing output.
+Read [TOKEN_PROTOCOL.md](TOKEN_PROTOCOL.md) now, then continue with the requirements below.
+
 ## Project Overview
 
 [Describe your project here. What does it do? Who is it for?]

@@ -8,10 +8,11 @@
 #   bash tests/token-verification/run-verification.sh
 #
 # Environment variables:
-#   REPEAT_COUNT   Number of runs per prompt per mode (default: 3)
-#   MODEL          Claude model to use (default: sonnet)
-#   PROMPTS_FILE   Path to prompts JSON file (default: auto-detected)
-#   SKILL_FILE     Path to token protocol skill file (default: auto-detected)
+#   REPEAT_COUNT       Number of runs per prompt per mode (default: 3)
+#   MODEL              Claude model to use (default: sonnet)
+#   PROMPTS_FILE       Path to prompts JSON file (default: auto-detected)
+#   SKILL_FILE         Path to token protocol skill file (default: auto-detected)
+#   SKIP_QUALITY_CHECK Skip acceptance criteria validation (default: false)
 
 set -euo pipefail
 
@@ -23,7 +24,8 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 REPEAT_COUNT="${REPEAT_COUNT:-3}"
 MODEL="${MODEL:-sonnet}"
 PROMPTS_FILE="${PROMPTS_FILE:-$SCRIPT_DIR/prompts.json}"
-SKILL_FILE="${SKILL_FILE:-$PROJECT_ROOT/.sdlc/sessions/task-token-protocol/SKILL.md}"
+SKILL_FILE="${SKILL_FILE:-$PROJECT_ROOT/.agents/TOKEN_PROTOCOL.md}"
+SKIP_QUALITY_CHECK="${SKIP_QUALITY_CHECK:-false}"
 
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 RESULTS_DIR="$SCRIPT_DIR/results/run-$TIMESTAMP"
@@ -87,6 +89,49 @@ extract_usage() {
     }' "$json_file"
 }
 
+evaluate_criteria() {
+    local response_file="$1"
+    local prompt_index="$2"
+
+    local response_text
+    response_text=$(jq -r '.result // ""' "$response_file")
+    if [[ -z "$response_text" ]]; then
+        echo '{"quality_pass": false, "passed": 0, "failed": 0, "failed_criteria": ["empty response"]}'; return
+    fi
+
+    local criteria_count
+    criteria_count=$(jq ".prompts[$prompt_index].acceptance_criteria // [] | length" "$PROMPTS_FILE")
+    if [[ "$criteria_count" -eq 0 ]]; then
+        echo '{"quality_pass": true, "passed": 0, "failed": 0, "failed_criteria": [], "skipped": true}'; return
+    fi
+
+    local passed=0 failed=0 failed_criteria="[]"
+    for c in $(seq 0 $((criteria_count - 1))); do
+        local ctype cvalue clabel
+        ctype=$(jq -r ".prompts[$prompt_index].acceptance_criteria[$c].type" "$PROMPTS_FILE")
+        cvalue=$(jq -r ".prompts[$prompt_index].acceptance_criteria[$c].value" "$PROMPTS_FILE")
+        clabel=$(jq -r ".prompts[$prompt_index].acceptance_criteria[$c].label" "$PROMPTS_FILE")
+        local matched=false
+        case "$ctype" in
+            contains)     printf '%s' "$response_text" | grep -qiF -- "$cvalue" && matched=true || true ;;
+            not_contains) printf '%s' "$response_text" | grep -qiF -- "$cvalue" || matched=true ;;
+            regex)        printf '%s' "$response_text" | grep -qiE -- "$cvalue" && matched=true || true ;;
+        esac
+        if [[ "$matched" == "true" ]]; then
+            passed=$((passed + 1))
+        else
+            failed=$((failed + 1))
+            failed_criteria=$(echo "$failed_criteria" | jq --arg label "$clabel" '. + [$label]')
+        fi
+    done
+
+    local quality_pass="true"
+    [[ "$failed" -gt 0 ]] && quality_pass="false"
+    jq -n --argjson passed "$passed" --argjson failed "$failed" \
+        --argjson quality_pass "$quality_pass" --argjson failed_criteria "$failed_criteria" \
+        '{quality_pass: $quality_pass, passed: $passed, failed: $failed, failed_criteria: $failed_criteria}'
+}
+
 # --- Main execution ---
 
 main() {
@@ -95,6 +140,13 @@ main() {
 
     local prompt_count
     prompt_count=$(jq '.prompts | length' "$PROMPTS_FILE")
+
+    local quality_label
+    if [[ "$SKIP_QUALITY_CHECK" == "true" ]]; then
+        quality_label="DISABLED"
+    else
+        quality_label="ENABLED"
+    fi
 
     echo "========================================"
     echo "Token Reduction Verification Harness"
@@ -106,12 +158,12 @@ main() {
     echo "Total API calls: $((prompt_count * REPEAT_COUNT * 2))"
     echo "Results dir:    $RESULTS_DIR"
     echo "Skill file:     $SKILL_FILE"
+    echo "Quality check:  $quality_label"
     echo "========================================"
     echo ""
 
     mkdir -p "$RESULTS_DIR/baseline" "$RESULTS_DIR/protocol"
 
-    # Save run metadata
     jq -n \
         --arg date "$(date -Iseconds)" \
         --arg model "$MODEL" \
@@ -119,13 +171,15 @@ main() {
         --arg skill_file "$SKILL_FILE" \
         --arg prompts_file "$PROMPTS_FILE" \
         --arg claude_version "$(claude --version 2>/dev/null || echo 'unknown')" \
+        --arg skip_quality_check "$SKIP_QUALITY_CHECK" \
         '{
             date: $date,
             model: $model,
             repeat_count: ($repeat_count | tonumber),
             skill_file: $skill_file,
             prompts_file: $prompts_file,
-            claude_version: $claude_version
+            claude_version: $claude_version,
+            skip_quality_check: ($skip_quality_check == "true")
         }' > "$RESULTS_DIR/metadata.json"
 
     local all_results="[]"
@@ -147,6 +201,8 @@ main() {
         local protocol_output_tokens="[]"
         local protocol_costs="[]"
         local protocol_durations="[]"
+        local quality_results="[]"
+        local all_quality_pass="true"
 
         for r in $(seq 1 "$REPEAT_COUNT"); do
             echo "  Run $r/$REPEAT_COUNT..."
@@ -187,12 +243,32 @@ main() {
                 protocol_output_tokens=$(echo "$protocol_output_tokens" | jq ". + [$p_out]")
                 protocol_costs=$(echo "$protocol_costs" | jq ". + [$p_cost]")
                 protocol_durations=$(echo "$protocol_durations" | jq ". + [$p_dur]")
+
+                if [[ "$SKIP_QUALITY_CHECK" != "true" ]]; then
+                    local q_result
+                    q_result=$(evaluate_criteria "$protocol_file" "$i")
+                    quality_results=$(echo "$quality_results" | jq ". + [$q_result]")
+                    local run_pass
+                    run_pass=$(echo "$q_result" | jq -r '.quality_pass')
+                    if [[ "$run_pass" != "true" ]]; then
+                        all_quality_pass="false"
+                        echo "    Quality: FAIL — $(echo "$q_result" | jq -r '.failed_criteria | join(", ")')"
+                    else
+                        local q_skipped
+                        q_skipped=$(echo "$q_result" | jq -r '.skipped // false')
+                        if [[ "$q_skipped" == "true" ]]; then
+                            echo "    Quality: SKIP (no criteria defined)"
+                        else
+                            echo "    Quality: PASS ($(echo "$q_result" | jq -r '.passed') criteria)"
+                        fi
+                    fi
+                fi
             else
                 echo "FAILED"
             fi
         done
 
-        # Compute per-prompt statistics
+        # Compute per-prompt statistics (sign convention: baseline - protocol; positive = reduction)
         local prompt_result
         prompt_result=$(jq -n \
             --arg id "$prompt_id" \
@@ -206,6 +282,9 @@ main() {
             --argjson p_out "$protocol_output_tokens" \
             --argjson p_cost "$protocol_costs" \
             --argjson p_dur "$protocol_durations" \
+            --argjson quality_pass "$all_quality_pass" \
+            --argjson quality_results "$quality_results" \
+            --arg skip_quality "$SKIP_QUALITY_CHECK" \
             '{
                 id: $id,
                 category: $category,
@@ -222,9 +301,15 @@ main() {
                     cost_usd:      { values: $p_cost, mean: ($p_cost | add / length) },
                     duration_ms:   { values: $p_dur, mean: ($p_dur | add / length) }
                 },
+                quality: {
+                    pass: $quality_pass,
+                    skipped: ($skip_quality == "true"),
+                    results: $quality_results
+                },
                 delta: {
-                    output_tokens_pct: (if ($b_out | add / length) > 0 then ((($p_out | add / length) - ($b_out | add / length)) / ($b_out | add / length) * 100) else 0 end),
-                    cost_pct: (if ($b_cost | add / length) > 0 then ((($p_cost | add / length) - ($b_cost | add / length)) / ($b_cost | add / length) * 100) else 0 end)
+                    output_tokens_pct: (if ($b_out | add / length) > 0 then ((($b_out | add / length) - ($p_out | add / length)) / ($b_out | add / length) * 100) else 0 end),
+                    cost_pct: (if ($b_cost | add / length) > 0 then ((($b_cost | add / length) - ($p_cost | add / length)) / ($b_cost | add / length) * 100) else 0 end),
+                    valid: $quality_pass
                 }
             }')
 
@@ -252,6 +337,20 @@ main() {
                 else 0 end
             )
         },
+        quality_validated: {
+            prompt_count: [.[] | select(.quality.pass == true and .quality.skipped == false)] | length,
+            output_token_reduction_pct: (
+                if ([.[] | select(.quality.pass == true and .quality.skipped == false) | .baseline.output_tokens.mean] | add // 0) > 0
+                then ((([.[] | select(.quality.pass == true and .quality.skipped == false) | .baseline.output_tokens.mean] | add) - ([.[] | select(.quality.pass == true and .quality.skipped == false) | .protocol.output_tokens.mean] | add)) / ([.[] | select(.quality.pass == true and .quality.skipped == false) | .baseline.output_tokens.mean] | add) * 100)
+                else 0 end
+            ),
+            cost_reduction_pct: (
+                if ([.[] | select(.quality.pass == true and .quality.skipped == false) | .baseline.cost_usd.mean] | add // 0) > 0
+                then ((([.[] | select(.quality.pass == true and .quality.skipped == false) | .baseline.cost_usd.mean] | add) - ([.[] | select(.quality.pass == true and .quality.skipped == false) | .protocol.cost_usd.mean] | add)) / ([.[] | select(.quality.pass == true and .quality.skipped == false) | .baseline.cost_usd.mean] | add) * 100)
+                else 0 end
+            ),
+            failed_prompts: [.[] | select(.quality.pass == false) | .id]
+        },
         by_input_length: (
             group_by(.input_length) | map({
                 input_length: .[0].input_length,
@@ -269,7 +368,6 @@ main() {
 
     echo "$summary" > "$RESULTS_DIR/summary.json"
 
-    # Generate human-readable report
     generate_report "$summary" > "$RESULTS_DIR/report.md"
 
     echo "========================================"
@@ -280,17 +378,22 @@ main() {
         "Aggregate Results:",
         "  Baseline output tokens (mean total): \(.aggregate.total_baseline_output_mean)",
         "  Protocol output tokens (mean total): \(.aggregate.total_protocol_output_mean)",
-        "  Output token change: \(.aggregate.output_token_reduction_pct | . * 100 | round / 100)%",
+        "  Output token reduction: \(.aggregate.output_token_reduction_pct | . * 100 | round / 100)%",
         "",
         "  Baseline cost (mean total): $\(.aggregate.total_baseline_cost_mean | . * 10000 | round / 10000)",
         "  Protocol cost (mean total): $\(.aggregate.total_protocol_cost_mean | . * 10000 | round / 10000)",
-        "  Cost change: \(.aggregate.cost_reduction_pct | . * 100 | round / 100)%",
+        "  Cost reduction: \(.aggregate.cost_reduction_pct | . * 100 | round / 100)%",
+        "",
+        "Quality-Validated Results (\(.quality_validated.prompt_count) prompts passed):",
+        "  Output token reduction: \(.quality_validated.output_token_reduction_pct | . * 100 | round / 100)%",
+        "  Cost reduction: \(.quality_validated.cost_reduction_pct | . * 100 | round / 100)%",
+        (if (.quality_validated.failed_prompts | length) > 0 then "  Failed: \(.quality_validated.failed_prompts | join(", "))" else empty end),
         "",
         "By Input Length:",
-        (.by_input_length[] | "  \(.input_length) (\(.prompt_count) prompts): \(.output_token_reduction_pct | . * 100 | round / 100)% output tokens"),
+        (.by_input_length[] | "  \(.input_length) (\(.prompt_count) prompts): \(.output_token_reduction_pct | . * 100 | round / 100)% reduction"),
         "",
         "Per-Prompt Breakdown:",
-        (.prompts[] | "  \(.id) (\(.category), \(.input_length)): \(.delta.output_tokens_pct | . * 100 | round / 100)% output tokens")
+        (.prompts[] | "  \(.id) (\(.category), \(.input_length)): \(.delta.output_tokens_pct | . * 100 | round / 100)% reduction\(if .quality.skipped then "" elif .delta.valid then " [PASS]" else " [FAIL]" end)")
     '
     echo ""
     echo "Full results: $RESULTS_DIR/"
@@ -306,22 +409,40 @@ generate_report() {
     echo "Date: $(date -Iseconds)"
     echo "Model: $MODEL"
     echo "Repetitions per prompt: $REPEAT_COUNT"
+    echo "Quality check: $(if [[ "$SKIP_QUALITY_CHECK" == "true" ]]; then echo "DISABLED"; else echo "ENABLED"; fi)"
     echo ""
     echo "## Aggregate Results"
     echo ""
-    echo "| Metric | Baseline (mean) | Protocol (mean) | Change |"
-    echo "|--------|-----------------|-----------------|--------|"
+    echo "| Metric | Baseline (mean) | Protocol (mean) | Reduction |"
+    echo "|--------|-----------------|-----------------|-----------|"
 
     echo "$summary" | jq -r '
-        "| Output tokens | \(.aggregate.total_baseline_output_mean) | \(.aggregate.total_protocol_output_mean) | \(.aggregate.output_token_reduction_pct | . * 100 | round / 100)% reduction |",
-        "| Cost (USD) | $\(.aggregate.total_baseline_cost_mean | . * 10000 | round / 10000) | $\(.aggregate.total_protocol_cost_mean | . * 10000 | round / 10000) | \(.aggregate.cost_reduction_pct | . * 100 | round / 100)% reduction |"
+        "| Output tokens | \(.aggregate.total_baseline_output_mean) | \(.aggregate.total_protocol_output_mean) | \(.aggregate.output_token_reduction_pct | . * 100 | round / 100)% |",
+        "| Cost (USD) | $\(.aggregate.total_baseline_cost_mean | . * 10000 | round / 10000) | $\(.aggregate.total_protocol_cost_mean | . * 10000 | round / 10000) | \(.aggregate.cost_reduction_pct | . * 100 | round / 100)% |"
     '
+
+    echo ""
+    echo "### Quality-Validated Results"
+    echo ""
+    echo "$summary" | jq -r '
+        "Prompts passing quality check: \(.quality_validated.prompt_count) of \(.prompts | length)",
+        "",
+        "| Metric | Reduction (quality-validated only) |",
+        "|--------|------------------------------------|",
+        "| Output tokens | \(.quality_validated.output_token_reduction_pct | . * 100 | round / 100)% |",
+        "| Cost (USD) | \(.quality_validated.cost_reduction_pct | . * 100 | round / 100)% |"
+    '
+
+    if echo "$summary" | jq -e '.quality_validated.failed_prompts | length > 0' >/dev/null 2>&1; then
+        echo ""
+        echo "**Quality failures:** $(echo "$summary" | jq -r '.quality_validated.failed_prompts | join(", ")')"
+    fi
 
     echo ""
     echo "## Results by Input Length"
     echo ""
-    echo "| Input Length | Prompts | Baseline Out (mean total) | Protocol Out (mean total) | Change |"
-    echo "|-------------|---------|---------------------------|---------------------------|--------|"
+    echo "| Input Length | Prompts | Baseline Out (mean total) | Protocol Out (mean total) | Reduction |"
+    echo "|-------------|---------|---------------------------|---------------------------|-----------|"
 
     echo "$summary" | jq -r '
         .by_input_length[] |
@@ -331,12 +452,12 @@ generate_report() {
     echo ""
     echo "## Per-Prompt Results"
     echo ""
-    echo "| Prompt | Category | Input Length | Baseline Out (mean) | Protocol Out (mean) | Change |"
-    echo "|--------|----------|-------------|---------------------|---------------------|--------|"
+    echo "| Prompt | Category | Input Length | Baseline Out (mean) | Protocol Out (mean) | Reduction | Quality |"
+    echo "|--------|----------|-------------|---------------------|---------------------|-----------|---------|"
 
     echo "$summary" | jq -r '
         .prompts[] |
-        "| \(.id) | \(.category) | \(.input_length) | \(.baseline.output_tokens.mean) | \(.protocol.output_tokens.mean) | \(.delta.output_tokens_pct | . * 100 | round / 100)% |"
+        "| \(.id) | \(.category) | \(.input_length) | \(.baseline.output_tokens.mean) | \(.protocol.output_tokens.mean) | \(.delta.output_tokens_pct | . * 100 | round / 100)% | \(if .quality.skipped then "SKIP" elif .quality.pass then "PASS" else "FAIL" end) |"
     '
 
     echo ""
@@ -346,8 +467,16 @@ generate_report() {
     echo "Baseline: \`claude -p --bare --tools \"\" --model $MODEL\`"
     echo "Protocol: \`claude -p --bare --tools \"\" --model $MODEL --append-system-prompt-file SKILL.md\`"
     echo ""
-    echo "Positive percentages in the Change column indicate the protocol used more tokens."
-    echo "Negative percentages indicate the protocol reduced token usage (the desired outcome)."
+    echo "**Sign convention:** All percentage metrics use (baseline minus protocol) divided"
+    echo "by baseline. Positive values indicate the protocol reduced usage (the desired"
+    echo "outcome). Negative values indicate the protocol increased usage. This convention"
+    echo "applies uniformly across aggregate, by-input-length, and per-prompt tables."
+    echo ""
+    echo "**Quality gating:** Each protocol response is evaluated against per-prompt"
+    echo "acceptance criteria defined in prompts.json. Token and cost reductions are"
+    echo "reported for all prompts but are only considered validated when the quality"
+    echo "check passes. The Quality-Validated Results section excludes prompts that"
+    echo "failed acceptance criteria. Use SKIP_QUALITY_CHECK=true to disable."
     echo ""
     echo "## Raw Data"
     echo ""

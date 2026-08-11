@@ -1,16 +1,8 @@
-# Token-Efficient Processing Protocol
-
-All agents operating under this project must read and apply the [Token-Efficient Processing Protocol](TOKEN_PROTOCOL.md) before proceeding with any gate work. The protocol reduces token consumption in internal processing while preserving full quality in all user-facing output.
-
-Read [TOKEN_PROTOCOL.md](TOKEN_PROTOCOL.md) now, then continue with the requirements below.
-
----
-
 # Project Requirements
 
 This file contains **non-negotiable, project-specific requirements**. They are not suggestions. They are not defaults that can be overridden by convenience or delivery pressure. Every agent reads this file. Every gate enforces it. Violations are REQUIRED findings that block gate advancement.
 
-All agents read this file alongside `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, and `.agents/LESSONS.md` before beginning any gate work.
+All agents read this file alongside `.agents/CYNEFIN.md`, `.agents/PERSONALITY.md`, and `.agents/LESSONS.md`, `.agents/TOKEN_PROTOCOL.md` before beginning any gate work.
 
 Full requirement descriptions are in `.agents/requirements/`. Each file contains the requirement statement, rationale, scope, and enforcement rules.
 
